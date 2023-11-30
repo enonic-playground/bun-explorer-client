@@ -1,0 +1,126 @@
+@import breakpoints
+	
+$color-focus: #98c9f2
+$color-react: #282c34
+	
+$input-border-width: 2px
+$input-padding-left: 12px
+$input-height: 36px
+$icon-size: 14px
+$icon-top: ($input-height - $icon-size)/2
+$input-padding-right: $icon-size + (2 * $icon-top)
+
+p
+	margin: 0
+
+.search
+	background-color: $color-react
+	min-height: 100vh
+	// display: flex
+	// flex-direction: column
+	// align-items: center
+	// justify-content: center
+	// font-size: calc(10px + 2vmin)
+	color: white
+
+.search-form
+	box-sizing: border-box
+	padding-bottom: 22px
+	padding-top: 22px
+
+.search-form__form
+	box-sizing: border-box
+	margin-left: auto
+	margin-right: auto
+	position: relative
+	width: 376px
+
+.search-form__input
+	border: $input-border-width solid #d2d2d2
+	box-sizing: border-box
+	color: #727272
+	font-size: 16px
+	font-weight: 400
+	height: $input-height
+	line-height: $input-height
+	outline: none
+	padding-left: $input-padding-left
+	padding-right: $input-padding-right
+	width: 100%
+	&:focus
+		border-color: $color-focus
+		color: #000
+
+.search-form__button
+	background-color: transparent
+	border: 0 none
+	box-sizing: border-box
+	cursor: pointer
+	padding: 0
+	position: absolute
+	height: $icon-size
+	outline: none
+	top: $icon-top
+	right: $icon-top
+	width: $icon-size
+
+.search-form__svg
+	fill: $color-react
+	height: 100%
+	stroke: $color-react
+	width: 100%
+
+.container
+	box-sizing: border-box
+	margin-left: auto
+	margin-right: auto
+	width: 100%
+	@include desktopUp
+		width: 1024px
+	aside
+		display: inline-block
+		margin-right: 20px
+		vertical-align: top
+		width: 20%
+	section
+		display: inline-block
+		vertical-align: top
+		width: 70%
+
+.search-results
+	ul
+		list-style: none
+		padding-left: 0
+		li
+			margin-bottom: 10px
+			header
+				font-weight: bold
+
+.horizontal-slider
+	height: calc(10px + 2vmin)
+	width: 100%
+
+.example-track
+	background-color: #ddd
+	top: 0
+	bottom: 0
+	border-radius: 999px
+
+.example-thumb
+	font-size: calc(8px + 2vmin)
+	color: $color-react
+
+.d-f
+	display: flex
+
+.fx-d-r
+	flex-direction: row
+
+.jc-c
+	justify-content: center
+
+.jc-fs
+	justify-content: flex-start
+
+.jc-sb
+	justify-content: space-between

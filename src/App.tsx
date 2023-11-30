@@ -1,25 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import './styles/App.sass';
+
+import { GraphQLClient, ClientContext } from 'graphql-hooks'
+import { Page } from './components/Page';
+
+const API_KEY = 'biler';
+
+const client = new GraphQLClient({
+  fetchOptions: {
+    credentials: 'include',
+    headers: {
+      authorization: `Explorer-Api-Key ${API_KEY}` // mode must be cors otherwise this header is not sent
+    },
+    mode: 'cors',
+  },
+  logErrors: true,
+  url: 'http://localhost:8080/webapp/com.enonic.app.explorer/api/graphql',
+});
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ClientContext.Provider value={client}>
+      <Page/>
+    </ClientContext.Provider>
   );
 }
 
