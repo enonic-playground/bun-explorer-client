@@ -1,31 +1,21 @@
 import { SearchForm } from './SearchForm';
 import { SearchResults } from './SearchResults';
+import { Drivstoff } from './Drivstoff';
 import { Modell } from './Modell';
 import { usePageState } from '../hooks/usePageState';
 
 export function Page() {
     const {
-        // currentPage,
         data,
-        // dimPagination,
-        // dimSearchResults,
-        // filterHeadingText,
-        // headingText,
-        // hint,
+        drivstoffValues, setDrivstoffValues,
         loading,
         modelMin, setModelMin,
         modelMax, setModelMax,
-        // mainQueryRes,
-        // noHitsText,
         onFormSubmit,
         onInputChange,
-        // pages,
         placeholder,
         q,
-        // sanitizedIntroHtmlReplaced,
         searchString,
-        // smartFetch,
-        // sourceBuckets
       } = usePageState();
       return (
           <div className="search">
@@ -50,6 +40,10 @@ export function Page() {
                   max={modelMax}
                   setModelMin={setModelMin}
                   setModelMax={setModelMax}
+                />
+                <Drivstoff
+                  drivstoffValues={drivstoffValues}
+                  setDrivstoffValues={setDrivstoffValues}
                 />
               </aside>
               <section>

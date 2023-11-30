@@ -5,6 +5,14 @@ import { useState } from 'react';
 import { useUpdateEffect } from './useUpdateEffect';
 import {COLLECTION} from '../constants';
 
+interface Filter {
+    hasValue: {
+        field: string
+        intValues?: number[]
+        stringValues?: string[]
+    }
+}
+
 const GQL = gql.query({
     operation: 'interface',
     variables: {
@@ -56,6 +64,7 @@ export function usePageState() {
     const [ q, setQ ] = useState<string>('');
     const [ modelMin, setModelMin ] = useState(2000);
     const [ modelMax, setModelMax ] = useState(2023);
+    const [ drivstoffValues, setDrivstoffValues ] = useState<string[]>([]);
     const [ searchString, setSearchString ] = useState<string>(q);
     const [ fetchResults, { loading, error, data } ] = useManualQuery(GQL.query);
     // if (error) {
@@ -72,19 +81,29 @@ export function usePageState() {
     });
 
     useUpdateEffect(() => {
+        const filters: Filter[] = [{
+            hasValue: {
+                field: "modellar",
+                intValues: range(modelMin, modelMax)
+            }
+        }];
+        if (drivstoffValues.length) {
+            filters.push({
+                hasValue: {
+                    field: "drivstoff",
+                    stringValues: drivstoffValues
+                }
+            });
+        }
         fetchResults({
             variables: {
                 name: COLLECTION,
                 searchString: '',
-                filters: [{
-                    hasValue: {
-                        field: "modellar",
-                        intValues: range(modelMin, modelMax)
-                      }
-                }]
+                filters
             }
         });
     }, [
+        drivstoffValues,
         modelMin,
         modelMax
     ])
@@ -92,6 +111,7 @@ export function usePageState() {
     return {
         // currentPage,
         data,
+        drivstoffValues, setDrivstoffValues,
         // hint,
         loading,
         modelMin, setModelMin,
@@ -101,16 +121,25 @@ export function usePageState() {
             event.preventDefault();
 	        if (searchString !== q) {
                 setSearchString(q);
+                const filters: Filter[] = [{
+                    hasValue: {
+                        field: "modellar",
+                        intValues: range(modelMin, modelMax)
+                    }
+                }];
+                if (drivstoffValues.length) {
+                    filters.push({
+                        hasValue: {
+                            field: "drivstoff",
+                            stringValues: drivstoffValues
+                        }
+                    });
+                }
                 fetchResults({
                     variables: {
                         name: COLLECTION,
                         searchString: q, // q probably hasn't made it into searchString yet...
-                        filters: [{
-                            hasValue: {
-                                field: "modellar",
-                                intValues: range(modelMin, modelMax)
-                              }
-                        }]
+                        filters
                     }
                 });
             }
