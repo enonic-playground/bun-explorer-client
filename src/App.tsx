@@ -14,7 +14,7 @@ const client = new GraphQLClient({
     mode: 'cors',
   },
   logErrors: true,
-  url: 'http://localhost:8080/webapp/com.enonic.app.explorer/api/graphql',
+  url: '/webapp/com.enonic.app.explorer/api/graphql',
 });
 
 function App() {
