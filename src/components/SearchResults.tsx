@@ -12,6 +12,7 @@ export function SearchResults({
                         antall_seter: number
                         avgiftsklasse: string
                         bilen_star_i: string
+                        bildebase64: string
                         drivstoff: string
                         effekt: number
                         farge: string
@@ -41,12 +42,16 @@ export function SearchResults({
         <ul>
         {
             !data ? null : data.interface.search.hits.map(({_json: {
+                bildebase64,
                 modellar,
                 subtitle,
                 title,
                 totalpris
             }}, i) => <li key={i}>
                 <article>
+                    {
+                        !bildebase64 ? null : <img src={`data:image/jpeg;base64,${bildebase64}`} width={100}/>
+                    }
                     <header>{title}</header>
                     <p>{subtitle}</p>
                     <div className="d-f jc-sb">
