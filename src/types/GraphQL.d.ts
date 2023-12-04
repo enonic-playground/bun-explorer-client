@@ -40,4 +40,14 @@ export namespace GraphQL {
     export interface Interface {
         search: Search
     }
+
+    export interface Sort {
+        field: string
+        direction: "asc" | "desc"
+        location?: {
+            lat: number
+            lon: number
+        }
+        // unit?: "km"
+    }
 }

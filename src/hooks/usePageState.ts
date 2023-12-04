@@ -50,6 +50,11 @@ const GQL = gql.query({
                 required: true,
                 type: 'String',
             },
+            sort: {
+                list: true,
+                required: false,
+                type: 'SortInput',
+            },
             start: {
                 list: false,
                 required: false,
@@ -108,6 +113,11 @@ export function usePageState() {
     const [firstOnPage, setFirstOnPage] = useState<number>(1);
     const [lastOnPage, setLastOnPage] = useState<number>(1);
     const [total, setTotal] = useState<number>(0);
+    const [sort, setSort] = useState<GraphQL.Sort[]>([{
+        field: "_score",
+        direction: "desc"
+    }]);
+    const [sortField, setSortField] = useState<string>('_score');
 
     useWhenInit(() => {
         fetchResults({
@@ -116,6 +126,7 @@ export function usePageState() {
                 count: perPage,
                 name: COLLECTION,
                 searchString: '',
+                sort,
                 start,
             }
         });
@@ -141,6 +152,36 @@ export function usePageState() {
         perPage,
         start,
         total
+    ]);
+
+    useUpdateEffect(() => {
+        switch (sortField) {
+            case 'prisperkm':
+                setSort([{
+                    field: "prisperkm",
+                    direction: "asc"
+                }]);
+                break;
+            case 'prisperar':
+                setSort([{
+                    field: "prisperar",
+                    direction: "asc"
+                }]);
+                break;
+            case 'prisperhestekreft':
+                setSort([{
+                    field: "prisperhestekreft",
+                    direction: "asc"
+                }]);
+                break;
+            default:
+                setSort([{
+                    field: "_score",
+                    direction: "desc"
+                }]);
+        }
+    },[
+        sortField
     ]);
 
     useUpdateEffect(() => {
@@ -173,6 +214,7 @@ export function usePageState() {
                 name: COLLECTION,
                 searchString: '',
                 filters,
+                sort,
                 start,
             }
         });
@@ -182,6 +224,7 @@ export function usePageState() {
         drivstoffValues,
         modelMin,
         modelMax,
+        sort,
         start
     ])
 
@@ -226,6 +269,7 @@ export function usePageState() {
                         name: COLLECTION,
                         searchString: q, // q probably hasn't made it into searchString yet...
                         filters,
+                        sort,
                         start,
                     }
                 });
@@ -242,5 +286,6 @@ export function usePageState() {
         searchString,
         start, setStart,
         firstOnPage, lastOnPage, total,
+        sortField, setSortField
     }
 }

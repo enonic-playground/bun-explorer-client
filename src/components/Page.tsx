@@ -4,6 +4,7 @@ import { Modell } from './Modell';
 import { Pagination } from './Pagination';
 import { SearchForm } from './SearchForm';
 import { SearchResults } from './SearchResults';
+import { Sort } from './Sort';
 import { usePageState } from '../hooks/usePageState';
 
 
@@ -22,7 +23,8 @@ export function Page() {
         q,
         searchString,
         start, setStart,
-        firstOnPage, lastOnPage, total
+        firstOnPage, lastOnPage, total,
+        sortField, setSortField
       } = usePageState();
       return (
           <div className="search">
@@ -54,7 +56,10 @@ export function Page() {
                   setBestValue={setBestValue}
                   data={data}
                 />
-                
+                <Sort
+                  sortField={sortField}
+                  setSortField={setSortField}
+                />
               </aside>
               <section>
                 {
