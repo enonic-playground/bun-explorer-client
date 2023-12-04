@@ -13,6 +13,7 @@ export namespace GraphQL {
             bildebase64: string
             drivstoff: string
             effekt: number
+            kilometer: number
             farge: string
             fargebeskrivelse: string
             gang_registrert: string

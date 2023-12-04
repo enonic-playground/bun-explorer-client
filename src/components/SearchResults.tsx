@@ -2,6 +2,10 @@ import type { GraphQL } from '../types/GraphQL';
 
 import DOMPurify from 'dompurify';
 
+function numberWithCommas(x: number) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+}
+
 export function SearchResults({
     data,
     loading
@@ -19,13 +23,14 @@ export function SearchResults({
                 _highlight,
                 _json: {
                     bildebase64,
+                    kilometer,
                     modellar,
                     prisperar,
                     prisperkm,
                     prisperhestekreft,
                     subtitle,
                     title,
-                    totalpris
+                    totalpris,
                 }
             }, i) => <li key={i}>
                 <article>
@@ -34,11 +39,13 @@ export function SearchResults({
                     }
                     <header dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(_highlight && _highlight.title && _highlight.title[0] ? _highlight.title[0] : title) }}/>
                     <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(_highlight && _highlight.subtitle && _highlight.subtitle[0] ? _highlight.subtitle[0] : subtitle) }}/>
-                    <div className="d-f jc-sb">
-                        <p>{modellar}</p>
-                        <p>{totalpris}</p>
-                    </div>
                     <dl>
+                        <dt>Modell</dt>
+                        <dd>{modellar}</dd>
+                        <dt>Totalpris</dt>
+                        <dd>{numberWithCommas(totalpris)} kr</dd>
+                        <dt>Kilometer</dt>
+                        <dd>{kilometer} km</dd>
                         {!prisperkm ? null : <>
                             <dt>Pris/Km</dt>
                             <dd>{data?.interface.search.aggregationsAsJson.prisperkmStats.min
