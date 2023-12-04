@@ -96,7 +96,7 @@ export function Modell({
                 }
             }}
             pearling
-            renderThumb={(props, state) => <div {...props}>{state.valueNow}</div>}
+            renderThumb={(props, state) => <div {...props}>&nbsp;{state.valueNow}&nbsp;</div>}
             value={[min, max]}
         />}
     </div>;

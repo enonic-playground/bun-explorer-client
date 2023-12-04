@@ -97,8 +97,12 @@ p
 			header
 				font-weight: bold
 
+$slider-font-size: 16px
+$slider-height: 22px
+$slider-thumb-top: ($slider-height - $slider-font-size)/2
+
 .horizontal-slider
-	height: calc(10px + 2vmin)
+	height: $slider-height
 	width: 100%
 
 .example-track
@@ -108,12 +112,13 @@ p
 	border-radius: 999px
 
 .example-thumb
-	font-size: calc(8px + 2vmin)
+	top: $slider-thumb-top
+	font-size: $slider-font-size
 	color: $color-react
 
 .pagination
 	button
-		width: 5em
+		width: 80px
 
 .d-f
 	display: flex
@@ -132,4 +137,4 @@ p
 
 input[type=number]
 	margin-right: 1em
-	width: 3em
+	width: 72px
