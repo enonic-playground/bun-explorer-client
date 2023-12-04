@@ -45,6 +45,11 @@ const GQL = gql.query({
                 required: false,
                 type: 'FilterInput',
             },
+            highlight: {
+                list: false,
+                required: false,
+                type: 'InputTypeHighlight',
+            },
             searchString: {
                 list: false,
                 required: true,
@@ -93,6 +98,16 @@ const AGGREGATIONS = [{
     }
 }];
 
+const HIGHLIGHT = {
+    fields: [{
+        field: "title"
+    },{
+        field: "subtitle"
+    },{
+        field: "_allText"
+    }]
+};
+
 export function usePageState() {
     const [ q, setQ ] = useState<string>('');
     const [ modelMin, setModelMin ] = useState(2000);
@@ -124,6 +139,7 @@ export function usePageState() {
             variables: {
                 aggregations: AGGREGATIONS,
                 count: perPage,
+                // highlight: HIGHLIGHT,
                 name: COLLECTION,
                 searchString: '',
                 sort,
@@ -211,8 +227,9 @@ export function usePageState() {
             variables: {
                 aggregations: AGGREGATIONS,
                 count: perPage,
+                highlight: HIGHLIGHT,
                 name: COLLECTION,
-                searchString: '',
+                searchString,
                 filters,
                 sort,
                 start,
@@ -266,6 +283,7 @@ export function usePageState() {
                     variables: {
                         aggregations: AGGREGATIONS,
                         count: perPage,
+                        highlight: HIGHLIGHT,
                         name: COLLECTION,
                         searchString: q, // q probably hasn't made it into searchString yet...
                         filters,

@@ -1,6 +1,10 @@
 export namespace GraphQL {
     export interface Hit {
-        // _highlight
+        _highlight: {
+            _allText: string[]
+            title: string[]
+            subtitle: string[]
+        }
         _json: {
             antall_dorer: number
             antall_seter: number
@@ -32,6 +36,29 @@ export namespace GraphQL {
     }
     
     export interface Search {
+        aggregationsAsJson: {
+            prisperarStats: {
+                avg: number
+                count: number
+                max?: number
+                min?: number
+                sum: number
+            }
+            prisperhestekreftStats: {
+                avg: number
+                count: number
+                max?: number
+                min?: number
+                sum: number
+            }
+            prisperkmStats: {
+                avg: number
+                count: number
+                max?: number
+                min?: number
+                sum: number
+            }
+        }
         count: number
         hits: Hit[]
         total: number

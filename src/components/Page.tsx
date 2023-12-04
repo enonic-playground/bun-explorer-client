@@ -35,9 +35,6 @@ export function Page() {
               placeholder={placeholder}
               q={q}
             />
-            {
-              !searchString ? null : <p>searchString: {searchString}</p>
-            }
             <div className='container'>
               <aside>
                 <Modell
@@ -63,8 +60,9 @@ export function Page() {
               </aside>
               <section>
                 {
-                  !total ? null
-                    : <p>Viser treff {firstOnPage} til {lastOnPage} av totalt {total} treff</p>
+                  loading ? <p>Søker...</p>
+                    : !total ? <p>{!searchString ? null : <span>Søkte etter <b>{searchString}</b>. </span>}Ingen treff :(</p>
+                      : <p>{!searchString ? null : <span>Søkte etter <b>{searchString}</b>. </span>}Viser treff {firstOnPage} til {lastOnPage} av totalt {total} treff.</p>
                 }
                 <SearchResults
                   data={data}
