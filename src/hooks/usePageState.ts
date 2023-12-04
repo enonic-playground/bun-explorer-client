@@ -1,13 +1,18 @@
+import type { GraphQL } from '../types/GraphQL';
+
+
 import {useWhenInit} from '@seamusleahy/init-hooks';
 import * as gql from 'gql-query-builder';
 import { useManualQuery } from 'graphql-hooks';
 import { useState } from 'react';
 import { useUpdateEffect } from './useUpdateEffect';
 import {COLLECTION} from '../constants';
+import {range} from '../utils/range';
 
 interface Filter {
     hasValue: {
         field: string
+        floatValues?: number[]
         intValues?: number[]
         stringValues?: string[]
     }
@@ -25,11 +30,16 @@ const GQL = gql.query({
     fields: [{
         operation: 'search',
         variables: {
-            // aggregations: {
-            //     list: true,
-            //     required: false,
-            //     type: 'AggregationInput',
-            // },
+            aggregations: {
+                list: true,
+                required: false,
+                type: 'AggregationInput',
+            },
+            count: {
+                list: false,
+                required: false,
+                type: 'Int',
+            },
             filters: {
                 list: true,
                 required: false,
@@ -39,12 +49,17 @@ const GQL = gql.query({
                 list: false,
                 required: true,
                 type: 'String',
-            }
+            },
+            start: {
+                list: false,
+                required: false,
+                type: 'Int',
+            },
         },
         fields: [
             'count',
             'total',
-            // 'aggregationsAsJson',
+            'aggregationsAsJson',
             {
                 hits: [
                     '_highlight',
@@ -56,29 +71,77 @@ const GQL = gql.query({
     }]
 });
 
-
-const range = (start: number, end: number) => start === end ? [start] : Array.from({length: (end - start)}, (v, k) => k + start);
+const AGGREGATIONS = [{
+    name: "prisperkmStats",
+    stats: {
+        field: "prisperkm"
+    } 
+},{
+    name: "prisperarStats",
+    stats: {
+        field: "prisperar"
+    } 
+},{
+    name: "prisperhestekreftStats",
+    stats: {
+        field: "prisperhestekreft"
+    }
+}];
 
 export function usePageState() {
-    // const [currentPage, setCurrentPage] = useState<number>(1);
     const [ q, setQ ] = useState<string>('');
     const [ modelMin, setModelMin ] = useState(2000);
     const [ modelMax, setModelMax ] = useState(2023);
     const [ drivstoffValues, setDrivstoffValues ] = useState<string[]>([]);
     const [ searchString, setSearchString ] = useState<string>(q);
-    const [ fetchResults, { loading, error, data } ] = useManualQuery(GQL.query);
-    // if (error) {
-    //     console.error(error);
-    // }
+    const [ fetchResults, { loading, error, data } ] = useManualQuery<{
+        interface: GraphQL.Interface
+    }>(GQL.query);
+
+    const [ best, setBest ] = useState<'km'|'alder'|'effekt'>();
+    const [ bestValue, setBestValue ] = useState<number>();
+    // console.debug('best', best, 'bestValue', bestValue);
+
+    const [perPage, setPerPage] = useState<number>(10);
+    const [start, setStart] = useState<number>(0);
+
+    const [firstOnPage, setFirstOnPage] = useState<number>(1);
+    const [lastOnPage, setLastOnPage] = useState<number>(1);
+    const [total, setTotal] = useState<number>(0);
 
     useWhenInit(() => {
         fetchResults({
             variables: {
+                aggregations: AGGREGATIONS,
+                count: perPage,
                 name: COLLECTION,
                 searchString: '',
+                start,
             }
         });
     });
+
+    useUpdateEffect(() => {
+        setFirstOnPage(start + 1);
+    },[
+        start
+    ]);
+
+    useUpdateEffect(() => {
+        const newTotal = data?.interface.search.total || 0;
+        setTotal(newTotal);
+    },[
+        data
+    ]);
+
+    useUpdateEffect(() => {
+        const startPlussPerPage = start + perPage;
+        setLastOnPage(Math.min(startPlussPerPage, total));
+    },[
+        perPage,
+        start,
+        total
+    ]);
 
     useUpdateEffect(() => {
         const filters: Filter[] = [{
@@ -95,24 +158,37 @@ export function usePageState() {
                 }
             });
         }
+        if(best && bestValue) {
+            filters.push({
+                hasValue: {
+                    field: best === 'alder' ? 'prisperar' : best === 'km' ? 'prisperkm' : 'prisperhestekreft',
+                    floatValues: [bestValue]
+                }
+            });
+        }
         fetchResults({
             variables: {
+                aggregations: AGGREGATIONS,
+                count: perPage,
                 name: COLLECTION,
                 searchString: '',
-                filters
+                filters,
+                start,
             }
         });
     }, [
+        best,
+        perPage,
         drivstoffValues,
         modelMin,
-        modelMax
+        modelMax,
+        start
     ])
 
     return {
-        // currentPage,
+        best, setBest, bestValue, setBestValue,
         data,
         drivstoffValues, setDrivstoffValues,
-        // hint,
         loading,
         modelMin, setModelMin,
         modelMax, setModelMax,
@@ -135,11 +211,22 @@ export function usePageState() {
                         }
                     });
                 }
+                if(best && bestValue) {
+                    filters.push({
+                        hasValue: {
+                            field: best === 'alder' ? 'prisperar' : best === 'km' ? 'prisperkm' : 'prisperhestekreft',
+                            floatValues: [bestValue]
+                        }
+                    });
+                }
                 fetchResults({
                     variables: {
+                        aggregations: AGGREGATIONS,
+                        count: perPage,
                         name: COLLECTION,
                         searchString: q, // q probably hasn't made it into searchString yet...
-                        filters
+                        filters,
+                        start,
                     }
                 });
             }
@@ -149,8 +236,11 @@ export function usePageState() {
                 setQ(event.target.value);
             }
         },
+        perPage, setPerPage,
         placeholder: 'Search',
         q,
         searchString,
+        start, setStart,
+        firstOnPage, lastOnPage, total,
     }
 }

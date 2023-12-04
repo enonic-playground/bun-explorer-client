@@ -1,0 +1,1 @@
+export const range = (start: number, end: number) => start === end ? [start] : Array.from({length: (end - start)}, (v, k) => k + start);

@@ -1,41 +1,13 @@
+import type { GraphQL } from '../types/GraphQL';
+
+
 export function SearchResults({
     data,
     loading
 }: {
     data: {
-        interface: {
-            search: {
-                hits: {
-                    // _highlight
-                    _json: {
-                        antall_dorer: number
-                        antall_seter: number
-                        avgiftsklasse: string
-                        bilen_star_i: string
-                        bildebase64: string
-                        drivstoff: string
-                        effekt: number
-                        farge: string
-                        fargebeskrivelse: string
-                        gang_registrert: string
-                        girkasse: string
-                        hjuldrift: string
-                        interiorfarge: string
-                        karosseri: string
-                        modellar: string
-                        salgsform: string
-                        subtitle: string
-                        title: string
-                        totalpris: number
-                        utstyr: string[]
-                        vedlikehold: string
-                        vekt: number
-                    }
-                    _score: number
-                }[]
-            }
-        }
-    }|undefined,
+        interface: GraphQL.Interface
+    } | undefined
     loading: boolean
 }) {
     return <div className="search-results">
@@ -44,6 +16,9 @@ export function SearchResults({
             !data ? null : data.interface.search.hits.map(({_json: {
                 bildebase64,
                 modellar,
+                prisperar,
+                prisperkm,
+                prisperhestekreft,
                 subtitle,
                 title,
                 totalpris
@@ -58,6 +33,20 @@ export function SearchResults({
                         <p>{modellar}</p>
                         <p>{totalpris}</p>
                     </div>
+                    <dl>
+                        {!prisperar ? null : <>
+                            <dt>Pris/Alder</dt>
+                            <dd>{prisperar}</dd>
+                        </>}
+                        {!prisperkm ? null : <>
+                            <dt>Pris/Km</dt>
+                        <dd>{prisperkm}</dd>
+                        </>}
+                        {!prisperhestekreft ? null : <>
+                            <dt>Pris/Hk</dt>
+                            <dd>{prisperhestekreft}</dd>
+                        </>}
+                    </dl>
                 </article>
             </li>)
         }
