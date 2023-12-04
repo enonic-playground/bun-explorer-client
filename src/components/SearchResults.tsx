@@ -3,7 +3,7 @@ import type { GraphQL } from '../types/GraphQL';
 import DOMPurify from 'dompurify';
 
 function numberWithCommas(x: number) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+    return !x ? '' : x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
 }
 
 export function SearchResults({
