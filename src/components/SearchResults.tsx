@@ -6,6 +6,10 @@ function numberWithSeparator(x: number, separator = ' ') {
     return !x ? '' : x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 }
 
+function stringWithSeparator(s: string, separator = ' ') {
+    return !s ? '' : s.replace(/\B(?=(\d{3})+(?!\d))/g, separator);
+}
+
 export function SearchResults({
     data,
     loading
@@ -79,39 +83,42 @@ export function SearchResults({
                                     ? 'c-green'
                                     : ''
                             : ''
-                        }>{hestekrefter}</dd>
+                        }>{hestekrefter} Hk</dd>
                         {!prisperkm ? null : <>
                             <dt>Pris/Km</dt>
-                            <dd>{data?.interface.search.aggregationsAsJson.prisperkmStats.min
+                            <dd className={
+                                data?.interface.search.aggregationsAsJson.prisperkmStats.min
                                 ? prisperkm == data?.interface.search.aggregationsAsJson.prisperkmStats.min
-                                    ? <em className='c-green'>{prisperkm}</em>
+                                    ? 'c-green'
                                     : prisperkm == data?.interface.search.aggregationsAsJson.prisperkmStats.max
-                                        ? <em className='c-red'>{prisperkm}</em>
-                                        : prisperkm
-                                : prisperkm
-                            }</dd>
+                                        ? 'c-red'
+                                        : ''
+                                : ''
+                            }>{stringWithSeparator(Number(prisperkm).toFixed(2))} kr</dd>
                         </>}
                         {!prisperhestekreft ? null : <>
                             <dt>Pris/Hk</dt>
-                            <dd>{data?.interface.search.aggregationsAsJson.prisperhestekreftStats.min
+                            <dd className={
+                                data?.interface.search.aggregationsAsJson.prisperhestekreftStats.min
                                 ? prisperhestekreft == data?.interface.search.aggregationsAsJson.prisperhestekreftStats.min
-                                    ? <em className='c-green'>{prisperhestekreft}</em>
+                                    ? 'c-green'
                                     : prisperhestekreft == data?.interface.search.aggregationsAsJson.prisperhestekreftStats.max
-                                        ? <em className='c-red'>{prisperhestekreft}</em>
-                                        : prisperhestekreft
-                                : prisperhestekreft
-                            }</dd>
+                                        ? 'c-red'
+                                        : ''
+                                : ''
+                            }>{stringWithSeparator(Number(prisperhestekreft).toFixed(2))} kr</dd>
                         </>}
                         {!prisperar ? null : <>
                             <dt>Pris/Alder</dt>
-                            <dd>{data?.interface.search.aggregationsAsJson.prisperarStats.min
+                            <dd className={
+                                data?.interface.search.aggregationsAsJson.prisperarStats.min
                                 ? prisperar == data?.interface.search.aggregationsAsJson.prisperarStats.min
-                                    ? <em className='c-green'>{prisperar}</em>
+                                    ? 'c-green'
                                     : prisperar == data?.interface.search.aggregationsAsJson.prisperarStats.max
-                                        ? <em className='c-red'>{prisperar}</em>
-                                        : prisperar
-                                : prisperar
-                            }</dd>
+                                        ? 'c-red'
+                                        : ''
+                                : ''
+                            }>{stringWithSeparator(Number(prisperar).toFixed(2))} kr</dd>
                         </>}
                     </dl>
                 </article>
