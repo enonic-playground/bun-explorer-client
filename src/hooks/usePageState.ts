@@ -90,7 +90,7 @@ const AGGREGATIONS = [{
     stats: {
         field: "pris"
     }
-},,{
+},{
     name: "kmStats",
     stats: {
         field: "km"
@@ -198,7 +198,7 @@ export function usePageState() {
         const filters: Filter[] = [...DEFAULT_FILTERS,{
             hasValue: {
                 field: "modellar",
-                intValues: range(modelMin, modelMax)
+                intValues: range(modelMin, modelMax+1)
             }
         }];
         if (drivstoffValues.length) {
@@ -254,7 +254,7 @@ export function usePageState() {
                 const filters: Filter[] = [...DEFAULT_FILTERS, {
                     hasValue: {
                         field: "modellar",
-                        intValues: range(modelMin, modelMax)
+                        intValues: range(modelMin, modelMax+1)
                     }
                 }];
                 if (drivstoffValues.length) {
