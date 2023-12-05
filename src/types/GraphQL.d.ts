@@ -18,10 +18,13 @@ export namespace GraphQL {
             fargebeskrivelse: string
             gang_registrert: string
             girkasse: string
+            hestekrefter: number
             hjuldrift: string
             interiorfarge: string
             karosseri: string
-            modellar: string
+            km: number
+            modellar: number
+            pris: number
             prisperar: number
             prisperhestekreft: number
             prisperkm: number
@@ -38,6 +41,34 @@ export namespace GraphQL {
     
     export interface Search {
         aggregationsAsJson: {
+            prisStats: {
+                avg: number
+                count: number
+                max?: number
+                min?: number
+                sum: number
+            }
+            kmStats: {
+                avg: number
+                count: number
+                max?: number
+                min?: number
+                sum: number
+            }
+            modellarStats: {
+                avg: number
+                count: number
+                max?: number
+                min?: number
+                sum: number
+            }
+            effektStats: {
+                avg: number
+                count: number
+                max?: number
+                min?: number
+                sum: number
+            }
             prisperarStats: {
                 avg: number
                 count: number

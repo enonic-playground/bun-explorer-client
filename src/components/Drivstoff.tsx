@@ -2,7 +2,10 @@ import {useWhenInitAsync} from '@seamusleahy/init-hooks';
 import * as gql from 'gql-query-builder';
 import { useManualQuery } from 'graphql-hooks';
 // import { useState } from 'react';
-import {COLLECTION} from '../constants';
+import {
+    COLLECTION,
+    DEFAULT_FILTERS
+} from '../constants';
 
 const GQL = gql.query({
     operation: 'interface',
@@ -28,6 +31,11 @@ const GQL = gql.query({
                 type: 'Int',
                 // value: 0
             },
+            filters: {
+                list: true,
+                required: false,
+                type: 'FilterInput',
+            },
             searchString: {
                 list: false,
                 required: true,
@@ -52,6 +60,7 @@ export function Drivstoff({
     useWhenInitAsync(() => {
         fetchResults({
             variables: {
+                filters: DEFAULT_FILTERS,
                 name: COLLECTION,
                 searchString: '',
                 count: 0,

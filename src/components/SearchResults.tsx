@@ -2,8 +2,8 @@ import type { GraphQL } from '../types/GraphQL';
 
 import DOMPurify from 'dompurify';
 
-function numberWithCommas(x: number) {
-    return !x ? '' : x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+function numberWithSeparator(x: number, separator = ' ') {
+    return !x ? '' : x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, separator);
 }
 
 export function SearchResults({
@@ -15,7 +15,6 @@ export function SearchResults({
     } | undefined
     loading: boolean
 }) {
-    console.debug(typeof data?.interface.search.aggregationsAsJson.prisperkmStats.min, data?.interface.search.aggregationsAsJson.prisperkmStats.min);
     return <div className="search-results">
         <ul>
         {
@@ -23,14 +22,15 @@ export function SearchResults({
                 _highlight,
                 _json: {
                     bildebase64,
-                    kilometer,
+                    hestekrefter,
+                    km,
                     modellar,
+                    pris,
                     prisperar,
                     prisperkm,
                     prisperhestekreft,
                     subtitle,
-                    title,
-                    totalpris,
+                    title
                 }
             }, i) => <li key={i}>
                 <article>
@@ -41,17 +41,53 @@ export function SearchResults({
                     <p dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(_highlight && _highlight.subtitle && _highlight.subtitle[0] ? _highlight.subtitle[0] : subtitle) }}/>
                     <dl>
                         <dt>Modell</dt>
-                        <dd>{modellar}</dd>
+                        <dd className={
+                            data?.interface.search.aggregationsAsJson.modellarStats.min
+                            ? modellar == data?.interface.search.aggregationsAsJson.modellarStats.min
+                                ? 'c-red'
+                                : modellar == data?.interface.search.aggregationsAsJson.modellarStats.max
+                                    ? 'c-green'
+                                    : ''
+                            : ''
+                        }>{modellar}</dd>
                         <dt>Totalpris</dt>
-                        <dd>{numberWithCommas(totalpris)} kr</dd>
+                        <dd className={
+                            data?.interface.search.aggregationsAsJson.prisStats.min
+                            ? pris == data?.interface.search.aggregationsAsJson.prisStats.min
+                                ? 'c-green'
+                                : pris == data?.interface.search.aggregationsAsJson.prisStats.max
+                                    ? 'c-red'
+                                    : ''
+                            : ''
+                        }>{numberWithSeparator(pris)} kr</dd>
                         <dt>Kilometer</dt>
-                        <dd>{kilometer} km</dd>
+                        <dd className={
+                            data?.interface.search.aggregationsAsJson.kmStats.min
+                            ? km == data?.interface.search.aggregationsAsJson.kmStats.min
+                                ? 'c-green'
+                                : km == data?.interface.search.aggregationsAsJson.kmStats.max
+                                    ? 'c-red'
+                                    : ''
+                            : ''
+                        }>{numberWithSeparator(km, '.')} km</dd>
+                        <dt>Effekt</dt>
+                        <dd className={
+                            data?.interface.search.aggregationsAsJson.effektStats.min
+                            ? hestekrefter == data?.interface.search.aggregationsAsJson.effektStats.min
+                                ? 'c-red'
+                                : hestekrefter == data?.interface.search.aggregationsAsJson.effektStats.max
+                                    ? 'c-green'
+                                    : ''
+                            : ''
+                        }>{hestekrefter}</dd>
                         {!prisperkm ? null : <>
                             <dt>Pris/Km</dt>
                             <dd>{data?.interface.search.aggregationsAsJson.prisperkmStats.min
                                 ? prisperkm == data?.interface.search.aggregationsAsJson.prisperkmStats.min
-                                    ? <em>{prisperkm}</em>
-                                    : prisperkm
+                                    ? <em className='c-green'>{prisperkm}</em>
+                                    : prisperkm == data?.interface.search.aggregationsAsJson.prisperkmStats.max
+                                        ? <em className='c-red'>{prisperkm}</em>
+                                        : prisperkm
                                 : prisperkm
                             }</dd>
                         </>}
@@ -59,8 +95,10 @@ export function SearchResults({
                             <dt>Pris/Hk</dt>
                             <dd>{data?.interface.search.aggregationsAsJson.prisperhestekreftStats.min
                                 ? prisperhestekreft == data?.interface.search.aggregationsAsJson.prisperhestekreftStats.min
-                                    ? <em>{prisperhestekreft}</em>
-                                    : prisperhestekreft
+                                    ? <em className='c-green'>{prisperhestekreft}</em>
+                                    : prisperhestekreft == data?.interface.search.aggregationsAsJson.prisperhestekreftStats.max
+                                        ? <em className='c-red'>{prisperhestekreft}</em>
+                                        : prisperhestekreft
                                 : prisperhestekreft
                             }</dd>
                         </>}
@@ -68,8 +106,10 @@ export function SearchResults({
                             <dt>Pris/Alder</dt>
                             <dd>{data?.interface.search.aggregationsAsJson.prisperarStats.min
                                 ? prisperar == data?.interface.search.aggregationsAsJson.prisperarStats.min
-                                    ? <em>{prisperar}</em>
-                                    : prisperar
+                                    ? <em className='c-green'>{prisperar}</em>
+                                    : prisperar == data?.interface.search.aggregationsAsJson.prisperarStats.max
+                                        ? <em className='c-red'>{prisperar}</em>
+                                        : prisperar
                                 : prisperar
                             }</dd>
                         </>}

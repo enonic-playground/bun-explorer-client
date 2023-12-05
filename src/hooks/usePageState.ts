@@ -1,22 +1,16 @@
+import type { Filter } from '../types/Filter';
 import type { GraphQL } from '../types/GraphQL';
-
 
 import {useWhenInit} from '@seamusleahy/init-hooks';
 import * as gql from 'gql-query-builder';
 import { useManualQuery } from 'graphql-hooks';
 import { useState } from 'react';
 import { useUpdateEffect } from './useUpdateEffect';
-import {COLLECTION} from '../constants';
+import {
+    COLLECTION,
+    DEFAULT_FILTERS,
+} from '../constants';
 import {range} from '../utils/range';
-
-interface Filter {
-    hasValue: {
-        field: string
-        floatValues?: number[]
-        intValues?: number[]
-        stringValues?: string[]
-    }
-}
 
 const GQL = gql.query({
     operation: 'interface',
@@ -82,15 +76,45 @@ const GQL = gql.query({
 });
 
 const AGGREGATIONS = [{
+//     name: "modellarMin",
+//     min: {
+//         field: "modellar"
+//     }
+// },{
+//     name: "modellarMax",
+//     max: {
+//         field: "modellar"
+//     }
+// },{
+    name: "prisStats",
+    stats: {
+        field: "pris"
+    }
+},,{
+    name: "kmStats",
+    stats: {
+        field: "km"
+    }
+},{
+    name: "modellarStats",
+    stats: {
+        field: "modellar"
+    }
+},{
+    name: "effektStats",
+    stats: {
+        field: "hestekrefter"
+    }
+},{
     name: "prisperkmStats",
     stats: {
         field: "prisperkm"
-    } 
+    }
 },{
     name: "prisperarStats",
     stats: {
         field: "prisperar"
-    } 
+    }
 },{
     name: "prisperhestekreftStats",
     stats: {
@@ -110,7 +134,7 @@ const HIGHLIGHT = {
 
 export function usePageState() {
     const [ q, setQ ] = useState<string>('');
-    const [ modelMin, setModelMin ] = useState(2000);
+    const [ modelMin, setModelMin ] = useState(1900);
     const [ modelMax, setModelMax ] = useState(2023);
     const [ drivstoffValues, setDrivstoffValues ] = useState<string[]>([]);
     const [ searchString, setSearchString ] = useState<string>(q);
@@ -132,13 +156,13 @@ export function usePageState() {
         field: "_score",
         direction: "desc"
     }]);
-    const [sortField, setSortField] = useState<string>('_score');
 
     useWhenInit(() => {
         fetchResults({
             variables: {
                 aggregations: AGGREGATIONS,
                 count: perPage,
+                filters: DEFAULT_FILTERS,
                 // highlight: HIGHLIGHT,
                 name: COLLECTION,
                 searchString: '',
@@ -171,37 +195,7 @@ export function usePageState() {
     ]);
 
     useUpdateEffect(() => {
-        switch (sortField) {
-            case 'prisperkm':
-                setSort([{
-                    field: "prisperkm",
-                    direction: "asc"
-                }]);
-                break;
-            case 'prisperar':
-                setSort([{
-                    field: "prisperar",
-                    direction: "asc"
-                }]);
-                break;
-            case 'prisperhestekreft':
-                setSort([{
-                    field: "prisperhestekreft",
-                    direction: "asc"
-                }]);
-                break;
-            default:
-                setSort([{
-                    field: "_score",
-                    direction: "desc"
-                }]);
-        }
-    },[
-        sortField
-    ]);
-
-    useUpdateEffect(() => {
-        const filters: Filter[] = [{
+        const filters: Filter[] = [...DEFAULT_FILTERS,{
             hasValue: {
                 field: "modellar",
                 intValues: range(modelMin, modelMax)
@@ -257,7 +251,7 @@ export function usePageState() {
             event.preventDefault();
 	        if (searchString !== q) {
                 setSearchString(q);
-                const filters: Filter[] = [{
+                const filters: Filter[] = [...DEFAULT_FILTERS, {
                     hasValue: {
                         field: "modellar",
                         intValues: range(modelMin, modelMax)
@@ -304,6 +298,6 @@ export function usePageState() {
         searchString,
         start, setStart,
         firstOnPage, lastOnPage, total,
-        sortField, setSortField
+        sort, setSort,
     }
 }

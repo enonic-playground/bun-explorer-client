@@ -52,7 +52,7 @@ export function Pagination({
             type='number'
             value={perPage}
         />
-        <label htmlFor="perPage">Per page</label>
+        <label htmlFor="perPage">Per side</label>
         <br />
         <input
             id='start'
@@ -82,7 +82,7 @@ export function Pagination({
             type='number'
             value={start}
         />
-        <label htmlFor="start">Offset</label>
+        <label htmlFor="start">Start</label>
         <br />
         {!data ? null : <>
             <input
@@ -94,7 +94,7 @@ export function Pagination({
                 type='number'
                 value={total}
             />
-            <label htmlFor="total">Total</label>
+            <label htmlFor="total">Totalt</label>
             <br />
             
             <br />
@@ -114,7 +114,7 @@ export function Pagination({
                 type='number'
                 value={page}
             />
-            <label htmlFor="page">Page</label>
+            <label htmlFor="page">Side</label>
             <br />
             <button disabled={page === pages} onClick={() => {
                 const newStart = (page) * perPage;
@@ -135,10 +135,10 @@ export function Pagination({
                 type='number'
                 value={pages}
             />
-            <label htmlFor="pages">Pages</label>
+            <label htmlFor="pages">Sider</label>
             <br />
             <br/>
-            <h3>Page</h3>
+            <h3>Side</h3>
             {pages <= 0 ? null : range(1, pages+1).map((p, i) => <div key={i}>
                 <button disabled={false} onClick={() => {
                     const newStart = (p - 1) * perPage;

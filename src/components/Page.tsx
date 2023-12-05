@@ -24,7 +24,7 @@ export function Page() {
         searchString,
         start, setStart,
         firstOnPage, lastOnPage, total,
-        sortField, setSortField
+        sort, setSort
       } = usePageState();
       return (
           <div className="search">
@@ -54,8 +54,8 @@ export function Page() {
                   data={data}
                 />
                 <Sort
-                  sortField={sortField}
-                  setSortField={setSortField}
+                  sort={sort}
+                  setSort={setSort}
                 />
               </aside>
               <section>
