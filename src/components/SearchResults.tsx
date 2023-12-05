@@ -48,9 +48,9 @@ export function SearchResults({
                         <dd className={
                             data?.interface.search.aggregationsAsJson.modellarStats.min
                             ? modellar == data?.interface.search.aggregationsAsJson.modellarStats.min
-                                ? 'c-red'
+                                ? 'c-worst'
                                 : modellar == data?.interface.search.aggregationsAsJson.modellarStats.max
-                                    ? 'c-green'
+                                    ? 'c-best'
                                     : ''
                             : ''
                         }>{modellar}</dd>
@@ -58,9 +58,9 @@ export function SearchResults({
                         <dd className={
                             data?.interface.search.aggregationsAsJson.prisStats.min
                             ? pris == data?.interface.search.aggregationsAsJson.prisStats.min
-                                ? 'c-green'
+                                ? 'c-best'
                                 : pris == data?.interface.search.aggregationsAsJson.prisStats.max
-                                    ? 'c-red'
+                                    ? 'c-worst'
                                     : ''
                             : ''
                         }>{numberWithSeparator(pris)} kr</dd>
@@ -68,9 +68,9 @@ export function SearchResults({
                         <dd className={
                             data?.interface.search.aggregationsAsJson.kmStats.min
                             ? km == data?.interface.search.aggregationsAsJson.kmStats.min
-                                ? 'c-green'
+                                ? 'c-best'
                                 : km == data?.interface.search.aggregationsAsJson.kmStats.max
-                                    ? 'c-red'
+                                    ? 'c-worst'
                                     : ''
                             : ''
                         }>{numberWithSeparator(km, '.')} km</dd>
@@ -78,9 +78,9 @@ export function SearchResults({
                         <dd className={
                             data?.interface.search.aggregationsAsJson.effektStats.min
                             ? hestekrefter == data?.interface.search.aggregationsAsJson.effektStats.min
-                                ? 'c-red'
+                                ? 'c-worst'
                                 : hestekrefter == data?.interface.search.aggregationsAsJson.effektStats.max
-                                    ? 'c-green'
+                                    ? 'c-best'
                                     : ''
                             : ''
                         }>{hestekrefter} Hk</dd>
@@ -89,9 +89,9 @@ export function SearchResults({
                             <dd className={
                                 data?.interface.search.aggregationsAsJson.prisperkmStats.min
                                 ? prisperkm == data?.interface.search.aggregationsAsJson.prisperkmStats.min
-                                    ? 'c-green'
+                                    ? 'c-best'
                                     : prisperkm == data?.interface.search.aggregationsAsJson.prisperkmStats.max
-                                        ? 'c-red'
+                                        ? 'c-worst'
                                         : ''
                                 : ''
                             }>{stringWithSeparator(Number(prisperkm).toFixed(2))} kr</dd>
@@ -101,9 +101,9 @@ export function SearchResults({
                             <dd className={
                                 data?.interface.search.aggregationsAsJson.prisperhestekreftStats.min
                                 ? prisperhestekreft == data?.interface.search.aggregationsAsJson.prisperhestekreftStats.min
-                                    ? 'c-green'
+                                    ? 'c-best'
                                     : prisperhestekreft == data?.interface.search.aggregationsAsJson.prisperhestekreftStats.max
-                                        ? 'c-red'
+                                        ? 'c-worst'
                                         : ''
                                 : ''
                             }>{stringWithSeparator(Number(prisperhestekreft).toFixed(2))} kr</dd>
@@ -113,9 +113,9 @@ export function SearchResults({
                             <dd className={
                                 data?.interface.search.aggregationsAsJson.prisperarStats.min
                                 ? prisperar == data?.interface.search.aggregationsAsJson.prisperarStats.min
-                                    ? 'c-green'
+                                    ? 'c-best'
                                     : prisperar == data?.interface.search.aggregationsAsJson.prisperarStats.max
-                                        ? 'c-red'
+                                        ? 'c-worst'
                                         : ''
                                 : ''
                             }>{stringWithSeparator(Number(prisperar).toFixed(2))} kr</dd>
